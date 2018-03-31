@@ -4,6 +4,12 @@
   "description": "Nuxt.js project",
   "author": "sniu23 <5988964@qq.com>",
   "private": true,
+  "config": {
+    "nuxt": {
+      "host": "127.0.0.1",
+      "port": "3000"
+    }
+  },
   "scripts": {
     "dev": "nuxt",
     "build": "nuxt build",
@@ -13,8 +19,10 @@
     "precommit": "npm run lint"
   },
   "dependencies": {
-    "axios": "^0.18.0",
-    "iview": "^2.11.0",
+    "@nuxtjs/axios": "^5.1.1",
+    "element-ui": "^2.3.2",
+    "js-cookie": "^2.2.0",
+    "md5": "^2.2.1",
     "node-sass": "^4.7.2",
     "nuxt": "^1.0.0",
     "sass-loader": "^6.0.7"

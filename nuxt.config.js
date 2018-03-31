@@ -10,13 +10,22 @@ module.exports = {
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
     ]
   },
-  plugins: [
-    '~/plugins/IVUI'
-  ],
-  // css: [
-  //   'at-ui-style/css/at.min.css'
-  // ],
   loading: { color: '#3B8070' },
+  css: [
+    '~/assets/css/index.css'
+  ],
+  router: {
+    middleware: ['auth']
+  },
+  modules: [
+    '@nuxtjs/axios',
+  ],
+  axios: {
+    'baseURL': 'http://127.0.0.1:3001'
+  },
+  plugins: [
+    '~/plugins/element-ui', '~/plugins/axios'
+  ],
   build: {
     extend (config, { isDev, isClient }) {
       if (isDev && isClient) {
@@ -29,7 +38,7 @@ module.exports = {
       }
     },
     vendor: [
-      'axios', 'iview'
+      'axios', 'element-ui', 'js-cookie', 'md5'
     ]
   }
 }

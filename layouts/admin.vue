@@ -1,105 +1,157 @@
 <template>
-  <div class="box">
-    <layout>
-      <i-header class="north">
-        <i-menu class="topMenu" mode="horizontal" active-name="help">
-          <div class="logo"></div>
-          <breadcrumb class="bread">
-            <breadcrumb-item>主页</breadcrumb-item>
-            <breadcrumb-item>Components</breadcrumb-item>
-            <breadcrumb-item>Layout</breadcrumb-item>
-          </breadcrumb>
-          <div class="user">
-            <menu-item name="help">
-              <icon type="ios-navigate"></icon>
-              帮助
-            </menu-item>
-            <menu-item name="user">
-              <icon type="ios-keypad"></icon>
-              用户
-            </menu-item>
-          </div>
-        </i-menu>
-      </i-header>
-      <layout class="south">
-        <sider hide-trigger class="west">
-          <i-menu accordion theme="light" width="auto">
-            <submenu name="1">
-              <template slot="title">
-                <icon type="ios-navigate"></icon>
-                <span class="small">菜单 1</span>
-              </template>
-              <menu-item name="1-1"><span class="small">选项 1</span></menu-item>
-              <menu-item name="1-2"><span class="small">选项 2</span></menu-item>
-              <menu-item name="1-3"><span class="small">选项 3</span></menu-item>
-            </submenu>
-            <submenu name="2">
-              <template slot="title">
-                <icon type="ios-keypad"></icon>
-                <span class="small">菜单 2</span>
-              </template>
-              <menu-item name="2-1"><span class="small">选项 1</span></menu-item>
-              <menu-item name="2-2"><span class="small">选项 2</span></menu-item>
-            </submenu>
-            <submenu name="3">
-              <template slot="title">
-                <icon type="ios-analytics"></icon>
-                <span class="small">菜单 3</span>
-              </template>
-              <menu-item name="3-1"><span class="small">选项 1</span></menu-item>
-              <menu-item name="3-2"><span class="small">选项 2</span></menu-item>
-            </submenu>
-          </i-menu>
-        </sider>
-        <layout class="east">
-          <i-content>
-            <nuxt/>
-          </i-content>
-        </layout>
-      </layout>
-    </layout>
-  </div>
+<el-container>
+  <el-header>
+    <div class="logo"></div>
+    <el-breadcrumb class="bread" separator="/">
+      <el-breadcrumb-item v-for="item in paths(list, $route.path)" :key="item.name">{{ item.name }}</el-breadcrumb-item>
+    </el-breadcrumb>
+    <el-menu class="topMenu" default-active="help" mode="horizontal">
+      <el-submenu index="user">
+        <template slot="title">
+          <i class="el-icon-service"></i>
+          <span>{{$store.state.user && $store.state.user.name || '用户名'}}</span>
+        </template>
+        <el-menu-item index="changPass" @click.native="onChangPass">修改密码</el-menu-item>
+        <el-menu-item index="logout" @click.native="onLogout">登出</el-menu-item>
+      </el-submenu>
+      <el-menu-item index="help">
+        <template slot="title">
+          <i class="el-icon-phone"></i>
+          <span>帮助</span>
+        </template>
+      </el-menu-item>
+      <chg-pass :isVisible.sync="showChgPass" />
+    </el-menu>
+  </el-header>
+  <el-container class="south">
+    <el-aside width="200px">
+      <el-menu width="100%" router>
+        <nav-item :routes="list2tree(list)" />
+      </el-menu>
+    </el-aside>
+    <el-main>
+      <nuxt/>
+    </el-main>
+  </el-container>
+</el-container>
 </template>
 
-<style scoped>
-.north {
-  background: #fff;
-  padding: 0;
+<script>
+import NavItem from '~/components/navItem.vue'
+import ChgPass from '~/components/chgPass.vue'
+
+export default {
+  name: 'admin',
+  components: {
+    NavItem,
+    ChgPass
+  },
+  mounted: async function() {
+    let { data } = await this.$axios.$get(`/navigation/guest/`)
+    this.$data.list = data
+  },
+  data: function() {
+    return {
+      list: [],
+      showChgPass: false,
+      active: '/'
+    }
+  },
+  methods: {
+    list2tree: function(list) {  
+      const getChildren = function (fatherName) {
+        const _son = list.filter(function(item) {
+          return item.father === fatherName
+        })
+        let _grandson
+        if (_son.length > 0) {
+          _grandson = _son.map(function (item) {
+            item = Object.assign({}, item, { children: getChildren(item.path) })
+            return item
+          })
+        } else {
+          _grandson = []
+        }
+        return _grandson
+      }
+      const children = getChildren('/') || []
+      return children
+    },
+    paths: function(list, curr) {
+      let paths = []
+      for (let i=0; i<5; i++) {
+        for (let i=0; i<list.length; i++) {
+          if (paths.length == 0) {
+            if (list[i].path == curr) {
+              paths.unshift(list[i])
+            }
+          } else {
+            if (list[i].path == paths[0].father) {
+              paths.unshift(list[i])
+            }
+          }
+        }
+        if ((paths[0]) && (paths[0].father == '/')) break
+      }
+      return paths
+    },
+    onChangPass: function() {
+      this.showChgPass = true
+      this.$message({
+        message: '居中的文字',
+        center: true
+      })
+    },
+    onLogout: function() {
+      this.$store.dispatch('LOGOUT')
+      this.$router.push('/system/login')
+    }
+  }
 }
-.topMenu {
+</script>
+
+<style scoped>
+
+.el-header {
+  margin: 0;
+  padding: 0;
+  border-bottom: solid 1px #e6e6e6;
   display: inline-flex;
   flex-direction: row;
   justify-content: flex-start;
+  align-items: flex-end;
   width: 100vw;
 }
+
 .logo {
+  display: block;
   width: 160px;
   height: 30px;
   background: #2d8cf0;
   border-radius: 3px;
-  margin-left: 20px;
-  margin-top: 15px;
+  margin: 15px 20px;
 }
+
 .bread {
-  margin-left: 20px;
+  flex-grow: 1;
+  height: 60px;
+  line-height: 60px;
 }
-.user {
-  align-self: flex-end;
-  width: 200px;
-  margin: 0 auto;
-  margin-right: 20px;
+
+.el-main {
+  padding: 12px;
 }
+
 .south {
   min-height: calc(99vh - 64px);
 }
-.west {
-  background: #fff;     
-}
-.small {
+
+/* .small {
   font-size: 13px;
+} */
+
+.el-menu--popup > .el-menu-item {
+  width: 100px;
 }
-.east {
-  padding: 12px;
-  background: #fff;
-}
+
 </style>

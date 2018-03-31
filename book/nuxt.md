@@ -5,6 +5,8 @@
 - Comment out the line with useConfigFile: false
 - Run npm run dev - all OK this time.
 
+## [@nuxtjs/axios](https://axios.nuxtjs.org/usage.html)
+
 ## 目录
 
 - `assets` 资源： LESS、SASS、JAVASCRIPT……
@@ -16,19 +18,6 @@
 - `static` 静态文件 [不可更改]
 - `store` Vuex 状态 [不可更改]
 - `nuxt.config.js` 配置文件 [不可更改]
-
-## 别名
-
-~	| /
-- | -
-~assets	| /assets
-~components	| /components
-~pages	| /pages
-~plugins	| /plugins
-~static	| /static
-~store	| /store
-
-## 配置
 
 ## 路由
 

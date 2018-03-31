@@ -1,15 +1,16 @@
 <template>
-  <section>
-
-    <template v-for="item in routes" >
-      <el-menu-item v-if="item.children.length === 0" :key="item.name" :index="item.path" :meta="item.meta">{{item.name}}</el-menu-item>
-      <el-submenu v-else :key="item.name" :index="item.path">
-        <template slot="title">{{item.name}}</template>
-        <nav-item :routes="item.children" />
-      </el-submenu>
+<ul>
+  <li v-for="item in routes" :key="item.path"
+    :is="(!item.children || item.children.length === 0) ? 'el-menu-item' : 'el-submenu' " 
+    :index="item.path">
+    <span v-if="(!item.children || item.children.length === 0)" class="small" slot="title">{{item.name}}</span>
+    <template v-else slot="title">
+      <i class='el-icon-location'></i>
+      <span class="small" slot="title">{{item.name}}</span>
     </template>
-
-  </section>
+    <nav-item :routes="item.children" />
+  </li>
+</ul>
 </template>
 
 <script>
@@ -17,8 +18,17 @@ export default {
   name: "navItem",
   props: {
     routes: {
-        type: Array
+      type: Array
     }
   }
 }
 </script>
+
+<style scoped>
+ul {
+  padding: 0;
+}
+.small {
+  font-size: 13px;
+}
+</style>

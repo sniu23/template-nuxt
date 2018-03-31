@@ -1,22 +1,11 @@
 <template>
   <section>
-    <i-button @click="show">Click me!</i-button>
-    <Modal v-model="visible" title="Welcome">Welcome to iView</Modal>
+    <el-button>Click me! 点我，点我吧！</el-button>
   </section>
 </template>
 
 <script>
 export default {
-  layout: 'admin',
-  data() {
-    return {
-      visible: false
-    }
-  },
-  methods: {
-    show: function () {
-      this.visible = true
-    }
-  }
+  layout: 'admin'
 }
 </script>
