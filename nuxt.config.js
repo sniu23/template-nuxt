@@ -12,7 +12,8 @@ module.exports = {
   },
   loading: { color: '#3B8070' },
   css: [
-    '~/assets/css/index.css'
+    '~/assets/css/index.css',
+    '~/assets/css/font-awesome.min.css'
   ],
   router: {
     middleware: ['auth']

@@ -24,7 +24,7 @@ export default function ({ $axios, redirect }) {
   $axios.onError(error => {
     const code = parseInt(error.response && error.response.status)
     if (code === 401) {
-      redirect('/test/login')
+      redirect('/system/login')
     } else {
       Message.error({
         message: (error.response && error.response.data && error.response.data.message) || (error.message) || 'unknown error !',

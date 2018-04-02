@@ -8,7 +8,7 @@
     <el-menu class="topMenu" default-active="help" mode="horizontal">
       <el-submenu index="user">
         <template slot="title">
-          <i class="el-icon-service"></i>
+          <i class="fa fa-user-circle-o fa-fw"></i>
           <span>{{$store.state.user && $store.state.user.name || '用户名'}}</span>
         </template>
         <el-menu-item index="changPass" @click.native="onChangPass">修改密码</el-menu-item>
@@ -16,7 +16,7 @@
       </el-submenu>
       <el-menu-item index="help">
         <template slot="title">
-          <i class="el-icon-phone"></i>
+          <i class="fa fa-question-circle-o fa-fw"></i>
           <span>帮助</span>
         </template>
       </el-menu-item>
@@ -25,7 +25,7 @@
   </el-header>
   <el-container class="south">
     <el-aside width="200px">
-      <el-menu width="100%" router>
+      <el-menu width="100%" unique-opened router>
         <nav-item :routes="list2tree(list)" />
       </el-menu>
     </el-aside>
@@ -97,10 +97,6 @@ export default {
     },
     onChangPass: function() {
       this.showChgPass = true
-      this.$message({
-        message: '居中的文字',
-        center: true
-      })
     },
     onLogout: function() {
       this.$store.dispatch('LOGOUT')
@@ -127,7 +123,7 @@ export default {
   display: block;
   width: 160px;
   height: 30px;
-  background: #2d8cf0;
+  background: #409EFF;
   border-radius: 3px;
   margin: 15px 20px;
 }

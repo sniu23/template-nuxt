@@ -10,3 +10,11 @@ body {
   /* font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif; */
   background: #fff;
 }
+
+.search .el-input, .search .el-select
+{
+  width: 200px;
+}
+.el-pagination {
+  margin-top: 10px;
+}
