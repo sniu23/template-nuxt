@@ -1,5 +1,5 @@
 <template>
-<el-dialog title="修改密码" :visible.sync="isVisible" @close="onClose">
+<el-dialog title="修改密码" :visible="isVisible" @close="onClose">
   <el-form :model="formPwd" label-width="120px" ref="formPwd" :rules="rules">
     <el-form-item label="老密码" prop="oldPwd">
       <el-input type="password" v-model="formPwd.oldPwd" auto-complete="off"></el-input>

@@ -22,13 +22,12 @@
         <el-option label="否" :value="false"/>
       </el-select>
     </el-form-item>
-    <br/>
-    <el-button-group>
+    <el-form-item>
       <el-button type="primary" @click="searchSubmit()">查询</el-button>
       <el-button @click="searchReset()">重置</el-button>
       <el-button type="danger" @click="handleMake()">新增</el-button>
       <el-button @click="treeShow()">树状浏览</el-button>
-    </el-button-group>
+    </el-form-item>
   </el-form>
 
   <div v-loading.body="loading">
@@ -53,7 +52,7 @@
       </el-table-column>
     </el-table>
 
-    <el-pagination layout="total, ->, sizes, prev, pager, next, jumper" 
+    <el-pagination layout="total, ->, sizes, prev, pager, next, jumper" small
       @current-change="handlePageChange" @size-change="handleSizeChange"
       :current-page.sync="pageNumber" :page-size="pageSize" :total="total" :page-sizes="[5, 10, 20, 50]">
     </el-pagination>
@@ -182,9 +181,11 @@ export default {
       }
       this.loading = true
       const { success, data } = await this.$axios.$get('/page', {
-        where: this.search,
-        limit: this.pageSize,
-        offset: (this.pageNumber - 1) * this.pageSize
+        params: {
+          whe: this.search,
+          lim: this.pageSize,
+          off: (this.pageNumber - 1) * this.pageSize
+        }
       })
       if (success) {
         this.list = data.rows
@@ -215,7 +216,7 @@ export default {
     async handleRowDrop(row) {
       const { success, message } = await this.$axios.$delete('/page')
       if (success) {
-        this.$message.success(message)
+        this.$message.success('删除成功！')
         await this.handlePageChange()
       }
     },
@@ -224,7 +225,7 @@ export default {
       if (valid) {
         const { success, message } = await this.$axios.$post('/page' + ((this.edit.id) ? '/' + this.edit.id : ''), this.edit)
         if (success) {
-          this.$message.success(message)
+          this.$message.success('保存成功！')
           this.$refs.edit.resetFields()
           this.editVisible = false
           await this.handlePageChange()

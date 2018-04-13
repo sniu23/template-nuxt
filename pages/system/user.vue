@@ -1,23 +1,23 @@
 <template>
 <section>
-  <el-form :model="search" ref="search" class="search" label-width="0px" inline>
+  <el-form :model="search" ref="search" class="search" label-width="0" inline>
     <el-form-item prop="no">
       <el-input v-model="search.no" placeholder="帐号"></el-input>
     </el-form-item>
     <el-form-item prop="name">
-      <el-input v-model="search.name"  placeholder="姓名"></el-input>
+      <el-input v-model="search.name" placeholder="姓名"></el-input>
     </el-form-item>
     <el-form-item prop="password">
-      <el-input v-model="search.password"  placeholder="密码"></el-input>
+      <el-input v-model="search.password" placeholder="密码"></el-input>
     </el-form-item>
     <el-form-item prop="mail">
-      <el-input v-model="search.mail"  placeholder="邮件"></el-input>
+      <el-input v-model="search.mail" placeholder="邮件"></el-input>
     </el-form-item>
     <el-form-item prop="mobile">
-      <el-input v-model="search.mobile"  placeholder="手机号"></el-input>
+      <el-input v-model="search.mobile" placeholder="手机号"></el-input>
     </el-form-item>
     <el-form-item prop="roleCode">
-      <el-input v-model="search.roleCode"  placeholder="权限"></el-input>
+      <el-input v-model="search.roleCode" placeholder="权限"></el-input>
     </el-form-item>
     <el-form-item prop="valid">
       <el-select v-model="search.valid" placeholder="有效否">
@@ -25,12 +25,11 @@
         <el-option label="否" :value="false"/>
       </el-select>
     </el-form-item>
-    <br/>
-    <el-button-group>
+    <el-form-item>
       <el-button type="primary" @click="searchSubmit()">查询</el-button>
       <el-button @click="searchReset()">重置</el-button>
       <el-button type="danger" @click="handleMake()">新增</el-button>
-    </el-button-group>
+    </el-form-item>
   </el-form>
 
   <div v-loading.body="loading">
@@ -57,7 +56,7 @@
       </el-table-column>
     </el-table>
 
-    <el-pagination layout="total, ->, sizes, prev, pager, next, jumper" 
+    <el-pagination layout="total, ->, sizes, prev, pager, next, jumper" small
       @current-change="handlePageChange" @size-change="handleSizeChange"
       :current-page.sync="pageNumber" :page-size="pageSize" :total="total" :page-sizes="[5, 10, 20, 50]">
     </el-pagination>
@@ -131,16 +130,16 @@ export default {
       rules: {
         no: [
           { required: true, message: '请输入帐号', trigger: 'blur' },
-          { min: 8, max: 20, message: '长度在 8 到 20 个字符', trigger: 'blur' }
+          { min: 5, max: 20, message: '长度在 5 到 20 个字符', trigger: 'blur' }
         ],
         name: [
           { required: true, message: '请输入姓名', trigger: 'blur' },
           { min: 2, max: 20, message: '长度在 2 到 20 个字符', trigger: 'blur' }
         ],
-        password: [
-          { required: true, message: '请输入密码', trigger: 'blur' },
-          { min: 6, max: 20, message: '长度在 6 到 20 个字符', trigger: 'blur' }
-        ],
+        // password: [
+        //   { required: true, message: '请输入密码', trigger: 'blur' },
+        //   { min: 6, max: 20, message: '长度在 6 到 20 个字符', trigger: 'blur' }
+        // ],
         mail: [
           { required: true, message: '请输入邮箱地址', trigger: 'blur' },
           { type: 'email', message: '请输入正确的邮箱地址', trigger: 'blur' },
@@ -174,9 +173,11 @@ export default {
       }
       this.loading = true
       const { success, data } = await this.$axios.$get(`/user`, {
-        whe: this.search,
-        lim: this.pageSize,
-        off: (this.pageNumber - 1) * this.pageSize
+        params: {
+          whe: this.search,
+          lim: this.pageSize,
+          off: (this.pageNumber - 1) * this.pageSize
+        }
       })
       if (success) {
         this.list = data.rows
@@ -208,7 +209,7 @@ export default {
     async handleRowDrop(row) {
       const { success, message } = await this.$axios.$delete(`/user/${row.id}`)
       if (success) {
-        this.$message.success(message)
+        this.$message.success('删除成功！')
         await this.handlePageChange()
       }
     },
@@ -217,7 +218,7 @@ export default {
       if (valid) {
         const { success, message } = await this.$axios.$post(`/user${this.edit.id ? '/' + this.edit.id : ''}`, this.edit)
         if (success) {
-          this.$message.success(message)
+          this.$message.success('保存成功！')
           this.$refs.edit.resetFields()
           this.editVisible = false
           await this.handlePageChange()

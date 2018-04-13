@@ -1,7 +1,8 @@
 <template>
 <el-container>
   <el-header>
-    <div class="logo"></div>
+    <div v-if="sideWidth === '200px'" class="logo"></div>
+    <div class="icon"><el-button type="text" size="medium" @click.native="onSideCollapse"><i class="fa fa-bars"></i></el-button></div>
     <el-breadcrumb class="bread" separator="/">
       <el-breadcrumb-item v-for="item in paths(list, $route.path)" :key="item.name">{{ item.name }}</el-breadcrumb-item>
     </el-breadcrumb>
@@ -24,8 +25,8 @@
     </el-menu>
   </el-header>
   <el-container class="south">
-    <el-aside width="200px">
-      <el-menu width="100%" unique-opened router>
+    <el-aside :width="sideWidth">
+      <el-menu width="98%" unique-opened router>
         <nav-item :routes="list2tree(list)" />
       </el-menu>
     </el-aside>
@@ -54,10 +55,15 @@ export default {
     return {
       list: [],
       showChgPass: false,
+      sideWidth: '200px',
       active: '/'
     }
   },
   methods: {
+    onSideCollapse: function() {
+      console.log(this.sideWidth)
+      this.sideWidth === '200px' ? this.sideWidth = '0px' : this.sideWidth = '200px'
+    },
     list2tree: function(list) {  
       const getChildren = function (fatherName) {
         const _son = list.filter(function(item) {
@@ -128,6 +134,14 @@ export default {
   margin: 15px 20px;
 }
 
+.icon {
+  display: block;
+  font-size: 20px;
+  height: 60px;
+  line-height: 60px;
+  margin: 0 20px;  
+}
+
 .bread {
   flex-grow: 1;
   height: 60px;
@@ -145,9 +159,5 @@ export default {
 /* .small {
   font-size: 13px;
 } */
-
-.el-menu--popup > .el-menu-item {
-  width: 100px;
-}
 
 </style>
